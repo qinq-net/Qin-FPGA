@@ -8,7 +8,7 @@ end entity;
 architecture oc2 of oc2 is
 begin process(a,b,c)
 begin	case c is
-		when '1' => y <= (a and b);
+		when '1' => y <= (a nand b);
 		when others => y <= 'Z';
 	end case;
 end process;

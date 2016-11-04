@@ -14,16 +14,16 @@ architecture testbench of tb_jk is
         	sd,rd:in std_logic);
 	end component;
 	signal clk_in,j_in,k_in,qq_out,nq_out,sd_in,rd_in:std_logic;
-	signal ins:std_logic_vector(4 downto 0):=(others=>'0');
+	signal ins:std_logic_vector(6 downto 0):=(others=>'0');
 begin
 	u_jk: jk port map (
 				  j=>ins(1),
 				  k=>ins(2),
 				  clk=>ins(0),
 				  qq=>qq_out,nq=>nq_out,
-				  sd=>ins(3),
-				  rd=>ins(4));
-	j_in<=ins(1);k_in<=ins(2);clk_in<=ins(0);sd_in<=ins(3);rd_in<=ins(4);
+				  sd=>ins(5),
+				  rd=>ins(6));
+	j_in<=ins(1);k_in<=ins(2);clk_in<=ins(0);sd_in<=ins(5);rd_in<=ins(6);
 	process begin
 --		clk_in <= '0';
 --		wait for 10 ns;
