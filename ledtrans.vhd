@@ -30,7 +30,7 @@ architecture ledtrans of ledtrans is
 			when "1111"=>d<="10001110";
 			when others=>d<="00000000";
 		end case;
-		else sel<='1';d<=(others=>'Z');
+		else sel<='1';d<=(others=>'0');
 		end if;
 	end process;
 end architecture;
