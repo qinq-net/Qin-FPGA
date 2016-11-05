@@ -5,17 +5,17 @@ use ieee.numeric_std.all;
 
 entity freqcnt is
 port(
-	clk,start,rst:in std_logic;
-	out0,out1,out2,out3,out4,out5,out6,out7:out std_logic_vector(3 downto 0);
+	clk,start,rst:in std_logic; --clk rising edge, rst low level effective
+	out0,out1,out2,out3,out4,out5,out6,out7:out std_logic_vector(3 downto 0); --bcd out
 	--led0,led1,led2,led3,led4,led5,led6,led7:out std_logic_vector(7 downto 0);
-	outy:out std_logic;
-	clksgn_out:out std_logic);
+	outy:out std_logic; --for expansion
+	clksgn_out:out std_logic); --output counted clk
 end entity;
 
 architecture freqcnt of freqcnt is
 --	component ledtrans is
 --	port(	ins:in std_logic_vector(3 downto 0);
---		rst:in std_logic;
+--		rst,pnt:in std_logic;
 --		sel:out std_logic;
 --		d:out std_logic_vector(7 downto 0));
 --	end component;
@@ -36,17 +36,17 @@ architecture freqcnt of freqcnt is
 	signal rstbcd:std_logic_vector(1 downto 0):="00";
 begin
 	clksgn_out<=clksgn;
-	clkoc2:oc2 port map(a=>clk,b=>clkallow,c=>clkallow,y=>clksgn);
-	rstbcd(0)<=not rst;
+	clkoc2:oc2 port map(a=>clk,b=>clkallow,c=>clkallow,y=>clksgn); --control clk
+	rstbcd(0)<=not rst; --bcdcount has opposed rst
 	rstbcd(1)<=not rst;
---	lt0:ledtrans port map(c0,rst,open,l0);
---	lt1:ledtrans port map(c1,rst,open,l1);
---	lt2:ledtrans port map(c2,rst,open,l2);
---	lt3:ledtrans port map(c3,rst,open,l3);
---	lt4:ledtrans port map(c4,rst,open,l4);
---	lt5:ledtrans port map(c5,rst,open,l5);
---	lt6:ledtrans port map(c6,rst,open,l6);
---	lt7:ledtrans port map(c7,rst,open,l7);
+--	lt0:ledtrans port map(c0,rst,'0',open,l0);
+--	lt1:ledtrans port map(c1,rst,'0',open,l1);
+--	lt2:ledtrans port map(c2,rst,'0',open,l2);
+--	lt3:ledtrans port map(c3,rst,'0',open,l3);
+--	lt4:ledtrans port map(c4,rst,'0',open,l4);
+--	lt5:ledtrans port map(c5,rst,'0',open,l5);
+--	lt6:ledtrans port map(c6,rst,'0',open,l6);
+--	lt7:ledtrans port map(c7,rst,'0',open,l7);
 	bc0:bcdcount port map(clksgn,c0(0),c0(0),c0(1),c0(2),c0(3),rstbcd,"00");
 	bc1:bcdcount port map(c0(3),c1(0),c1(0),c1(1),c1(2),c1(3),rstbcd,"00");
 	bc2:bcdcount port map(c1(3),c2(0),c2(0),c2(1),c2(2),c2(3),rstbcd,"00");
@@ -59,7 +59,7 @@ begin
 	out4<=c4;out5<=c5;out6<=c6;out7<=c7;
 --	led0<=l0;led1<=l1;led2<=l2;led3<=l3;
 --	led4<=l4;led5<=l5;led6<=l6;led7<=l7;
-	outy<=c7(3);
+	outy<=not c7(3); --outy should rise when back to 0
 	process begin
 		wait until(start'event and start='1');
 		clkallow<='1';

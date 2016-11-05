@@ -24,7 +24,7 @@ architecture freqled of freqled is
 	end component;
 	component ledtrans is
 	port(	ins:in std_logic_vector(3 downto 0);
-		rst:in std_logic;
+		rst,pnt:in std_logic;
 		sel:out std_logic;
 		d:out std_logic_vector(7 downto 0));
 	end component;
@@ -55,7 +55,7 @@ begin
 		--led0,led1,led2,led3,led4,led5,led6,led7:out std_logic_vector(7 downto 0);
 		open, --outy,
 		clksgn_out);
-	lt:ledtrans port map(ins=>ins_sgn,rst=>'1',sel=>open,d=>ledout_sgn);
+	lt:ledtrans port map(ins=>ins_sgn,rst=>'1',pnt=>'0',sel=>open,d=>ledout_sgn);
 --	process(clkled) begin
 --		if(clkled'event and clkled='1') then
 --			if(0<=ledptr<7) then ledptr:=ledptr+1;
