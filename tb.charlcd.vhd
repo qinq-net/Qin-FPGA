@@ -50,9 +50,9 @@ architecture bhv of charlcd is
 
 begin
 	lcd_clk:process(clk,rst) -- LCD data exchange rate
-		variable c1:integer range 0 to 100;
-		variable c2:integer range 0 to 50000000;
-		variable clk0,clk1:std_logic;
+		variable c1:integer range 0 to 100:=0;
+		variable c2:integer range 0 to 50000000:=0;
+		variable clk0,clk1:std_logic:='0';
 	begin
 		if rst='0' then c1:=0;c2:=0;
 		elsif clk'event and clk='1' then
@@ -266,7 +266,7 @@ begin
 	end process;
 test:process begin
 	rst<='0';
-	wait for 1 ms;
+	wait for 10 ns;
 	rst<='1';
 	wait for 120 sec;
 end process;
