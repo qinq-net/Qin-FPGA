@@ -4,8 +4,11 @@ use ieee.std_logic_1164.all;
 entity lock6 is
 	port(
 		clk,rst,set:in std_logic;
+--		clk->AB19(F3,CON1.12) rst->W19(F4,CON1.13) set->N18(SW2)
 		pwd:in std_logic;
+--		pwd->U15(SW1)
 		ulk,ast:out std_logic);
+--		ulk->U12(LED1) ast->V12(LED2)
 end entity;
 
 architecture bhv of lock6 is

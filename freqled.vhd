@@ -5,11 +5,13 @@ use ieee.numeric_std.all;
 
 entity freqled is
 port(
-	clk,start,rst:in std_logic;
---	out0,out1,out2,out3,out4,out5,out6,out7:out std_logic_vector(3 downto 0);
---	outy:out std_logic;
+	clk,start,rst:in std_logic; --rst low level effective, start rising edge effective
+--	clk->N19(EA2_p5)~target start->AB15(F1,CON1.10) rst->AA15(SW4)
 	clkled:in std_logic;
+--	clkled->P20(EA2_p6)~FRQ_Q9(4096Hz)
 	ledout,ledds:out std_logic_vector(7 downto 0);
+--	ledds 7->AB20(DS1) 6->Y21(DS2) 5->Y22(DS3) 4->W22(DS4) 3->V22(DS5) 2->U22(DS6) 1->AA17(DS7) 0->V16(DS8)
+--	ledout 7->AA20(LA) 6->W20(LB) 5->R21(LC) 4->P21(LD) 3->N21(LE) 2->N20(LF) 1->M21(LG) 0->M19(LH)
 	clksgn_out:out std_logic);
 end entity;
 

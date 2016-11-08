@@ -6,12 +6,13 @@ use ieee.numeric_std.all;
 entity charlcd is
 	generic(N:integer:=200;
 		delay:integer:=100);
-	port(	clk:in std_logic; --system clock
-		rst:in std_logic; --system reset, low level effective
-		oe:out std_logic; --LCD power port
-		rs:out std_logic; --LCD_da input
-		rw:out std_logic; --LCD rw input
+	port(	clk:in std_logic; --system clock clk->?
+		rst:in std_logic; --system reset, low level effective rst->U15(SW1)
+		oe:out std_logic; --LCD power port oe->A4(LCD_ES)
+		rs:out std_logic; --LCD_da input rs->A6(LCD_R_NS)
+		rw:out std_logic; --LCD rw input rw->A5(LCD_R_NW)
 		data:out std_logic_vector(7 downto 0)); -- LCD data input
+	--data->(AB17,AB18,C3,E5,C7,E6,F7,A3)
 end entity;
 architecture bhv of charlcd is
 	type state is

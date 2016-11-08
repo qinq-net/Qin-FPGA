@@ -5,15 +5,19 @@ use ieee.std_logic_arith.all;
 --use ieee.numeric_std.all;
 
 entity cn7 is
-	port(clk:in std_logic; --rising edge
-	start:in std_logic; --low level effective
+	port(clk:in std_logic; --rising edge --clk->P20(EA2_p6)~FRQ_Q9(4096Hz)
+	start:in std_logic; --low level effective --start->M20(SW3)
 	KBCol:in std_logic_vector(3 downto 0);
+--	KBCol 0->B10(SWC0) 1->D10(SWC1) 2->F9(SWC2) 3->A13(SWC3)
 	KBRow:out std_logic_vector(3 downto 0);
+--	KBRow 3->A14(SWR0) 2->A15(SWR1) 1->A16(SWR2) 0->C4(SWR3)
 	seg7:out std_logic_vector(6 downto 0);
+--	scan 7->AB20(DS1) 6->Y21(DS2) 5->Y22(DS3) 4->W22(DS4) 3->V22(DS5) 2->U22(DS6) 1->AA17(DS7) 0->V16(DS8)
+--	seg7 7->AA20(LA) 6->W20(LB) 5->R21(LC) 4->P21(LD) 3->N21(LE) 2->N20(LF) 1->M21(LG) 0->M19(LH)
 	scan:out std_logic_vector(7 downto 0));
 end entity;
 architecture bev of cn7 is
-	signal count,sta:std_logic_vector(1 downto 0);
+	signal count,sta:std_logic_vector(1 downto 0):="00";
 	signal seg7_sgn:std_logic_vector(6 downto 0):=(others=>'0');
 begin
 	scan<="11111110";
