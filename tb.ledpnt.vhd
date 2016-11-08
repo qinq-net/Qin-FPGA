@@ -9,7 +9,7 @@ use ieee.numeric_std.all;
 
 entity tb_ledpnt is
 	generic(n:integer:=72); -- length of chararray
-	port( clk:in std_logic;
+	port( --clk:in std_logic;
 	mode,rst:in std_logic;-- mode n18 sw1 -rst ab15 F1
 		row:out std_logic_vector(15 downto 0);
 		col:out std_logic_vector(3 downto 0));
@@ -139,14 +139,14 @@ process(clk,frame,rst) begin
 		end if;
 	end if;
 end process;
---tb:process begin
---	clk<='0';
---	wait for 100 us;
---	clk<='1';
---	wait for 100 us;
---end process;
+tb:process begin
+	clk<='0';
+	wait for 100 us;
+	clk<='1';
+	wait for 100 us;
+end process;
 end architecture;
---configuration CFG_TB of tb_jk is
---	for bhv
---		end for;
---end configuration;
+configuration CFG_TB of tb_jk is
+	for bhv
+		end for;
+end configuration;
