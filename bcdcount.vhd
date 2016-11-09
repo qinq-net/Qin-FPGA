@@ -1,6 +1,11 @@
+------------------------------------------------------------------------------------------
+-- bcdcount.vhd -- BCD Counter
+-- Copyright (C) 2016 Beihang University, School of Physics and Nuclear Energy Engineering
+-- Author: QIN Yuhao <qinq_net@buaa.edu.cn>
+-- Note:Used as component, no binding available
+------------------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
 
 entity bcdcount is
 port(

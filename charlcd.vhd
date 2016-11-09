@@ -1,8 +1,11 @@
+------------------------------------------------------------------------------------------
+-- charlcd.vhd -- LCD 2*16 Driver
+-- Copyright (C) 2016 Beihang University, School of Physics and Nuclear Energy Engineering
+-- Author: QIN Yuhao <qinq_net@buaa.edu.cn>
+------------------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
---use ieee.std_logic_arith.all;
---use ieee.std_logic_unsigned.all;
 entity charlcd is
 	generic(freq:integer:=24000000;
 		N:integer:=24000000/250000;
@@ -19,26 +22,33 @@ entity charlcd is
 end entity;
 architecture bhv of charlcd is
 	type state is
-		(clear_lcd,entry_set,display_set,function_set,position_set1,write_data1,position_set2,write_data2,stop);
+		(clear_lcd,entry_set,display_set,function_set,
+		position_set1,write_data1,position_set2,write_data2,stop);
 	signal current_state:state:=clear_lcd; --current running state
 	type ram is array(0 to 23) of std_logic_vector(7 downto 0);
 	signal dataram:ram:=(
-	"00110000",
-	"00110000",
-	"00111010",
-	"00110000",
-	"00110000",
-	"00111010",
-	"00110000",
-	"00110000",
---	x"77",	x"77",	x"77",	x"2E",	x"42",	x"55",	x"41",	x"41",	x"2E",	x"65",	x"64",	x"75",	x"2E",	x"63",	x"6E",	x"80");
---	w	w	w	.	B	U	A	A	.	e	d	u	.	c	n	\x80
-	x"B7",	x"D0",	x"20",	x"C9",	x"20",	x"C5",	x"CF",	x"B4",	x"20",	x"CA",	x"2E",	x"20",	x"31",	x"32",	x"30",	x"32");
---	ki	mi	\x20	no	\x20	na	ma	e	\x20	ha	.	\x20	1	2	0	2
+		"00110000",
+		"00110000",
+		"00111010",
+		"00110000",
+		"00110000",
+		"00111010",
+		"00110000",
+		"00110000",
+	-----------------------------------------------------------------------.data
+	--	x"77",	x"77",	x"77",	x"2E",	x"42",	x"55",	x"41",	x"41",	
+	----	w	w	w	.	B	U	A	A	
+	--	x"2E",	x"65",	x"64",	x"75",	x"2E",	x"63",	x"6E",	x"80");
+	----	.	e	d	u	.	c	n	\x80
+	-----------------------------------------------------------------------
+		x"B7",	x"D0",	x"20",	x"C9",	x"20",	x"C5",	x"CF",	x"B4",	
+	--	ki	mi	\x20	no	\x20	na	ma	e	
+		x"20",	x"CA",	x"2E",	x"20",	x"31",	x"32",	x"30",	x"32");
+	--	\x20	ha	.	\x20	1	2	0	2
 	signal clk_250KHz, clk_1Hz:std_logic:='0';
 	signal cnt1,cnt2:integer range 0 to 200000:=0;
-	signal hour_h_tmp,hour_l_tmp,min_h_tmp,min_l_tmp,sec_h_tmp,sec_l_tmp:std_logic_vector(3 downto 0):="0000";
-	
+	signal hour_h_tmp,hour_l_tmp,min_h_tmp,min_l_tmp,sec_h_tmp,sec_l_tmp:
+		std_logic_vector(3 downto 0):="0000";	
 	function "+"(L: STD_LOGIC_VECTOR; R: STD_LOGIC) return STD_LOGIC_VECTOR is
 		-- pragma label_applies_to_plus
 		variable result:UNSIGNED(L'range);
@@ -49,7 +59,6 @@ architecture bhv of charlcd is
 		end case;
 		return std_logic_vector(result);
 	end function;
-
 begin
 	lcd_clk:process(clk,rst) -- LCD data exchange rate
 		variable c1:integer range 0 to 100:=0;
@@ -78,7 +87,8 @@ begin
 			dataram(4)<="00110000";
 			dataram(6)<="00110000";
 			dataram(7)<="00110000";
-		elsif clk_250KHz'event and clk_250KHz='1' then --save clk count to dataram for timing
+		elsif clk_250KHz'event and clk_250KHz='1' then
+			--save clk count to dataram for timing
 			dataram(0)<="0011"&hour_h_tmp;
 			dataram(1)<="0011"&hour_l_tmp;
 			dataram(3)<="0011"&min_h_tmp;
@@ -106,7 +116,6 @@ begin
 						oe<='1';
 					end if;
 					if cnt1=delay*7 then
---					if cnt1>=delay*7 then
 						current_state<=entry_set;
 						cnt1<=0;
 					end if;
@@ -120,7 +129,6 @@ begin
 					else oe<='1';
 					end if;
 					if cnt1=delay*3 then
---					if cnt1>=delay*3 then
 						current_state<=display_set;
 						cnt1<=0;
 					end if;
@@ -134,7 +142,6 @@ begin
 					else oe<='1';
 					end if;
 					if cnt1=delay*3 then
---					if cnt1>=delay*3 then
 						current_state<=function_set;
 						cnt1<=0;
 					end if;
@@ -148,7 +155,6 @@ begin
 					else oe<='1';
 					end if;
 					if cnt1=delay*3 then
---					if cnt1>=delay*3 then
 						current_state<=position_set1;
 						cnt1<=0;
 					end if;
@@ -162,7 +168,6 @@ begin
 					else oe<='1';
 					end if;
 					if cnt1=delay*3 then
---					if cnt1>=delay*3 then
 						current_state<=write_data1;
 						cnt1<=0;
 					end if;
@@ -177,7 +182,6 @@ begin
 						else oe<='1';
 						end if;
 						if cnt1=delay*3 then
---						if cnt1>=delay*3 then
 							current_state<=write_data1;
 							cnt1<=0;
 							cnt2<=cnt2+1;
@@ -196,7 +200,6 @@ begin
 					else oe<='1';
 					end if;
 					if cnt1=delay*3 then
---					if cnt1>=delay*3 then
 						current_state<=write_data2;
 						cnt1<=0;
 					end if;
@@ -211,7 +214,6 @@ begin
 						else oe<='1';
 						end if;
 						if cnt1=delay*3 then
---						if cnt1>=delay*3 then
 							current_state<=write_data2;
 							cnt1<=0;
 							cnt2<=cnt2+1;

@@ -1,22 +1,26 @@
+------------------------------------------------------------------------------------------
+-- ledpnt.vhd -- LED 8*8 Lattice Driver
+-- Copyright (C) 2016 Beihang University, School of Physics and Nuclear Energy Engineering
+-- Author: QIN Yuhao <qinq_net@buaa.edu.cn>
+-- Note:OUTPUT:="\u541b\u306e\u540d\u306f\u3002"
+------------------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
---use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
 entity ledpnt is
 	generic(n:integer:=72); -- length of chararray
 	port( clk:in std_logic; --clk->P20(EA2_p6)~FRQ_Q11(1024Hz)
 	mode:in std_logic; --mode->N18(SW1) RST->AB15(F1)
-	rst:in std_logic;-- mode n18 sw1 -rst ab15 F1
-		row:out std_logic_vector(15 downto 0);
--- row(15 downto 0) ->	A4 A5 A6 B6 E11 C13 F11 C15
---			E14 B7 B8 B9 B10 D10 F9 A13
-		col:out std_logic_vector(3 downto 0));
--- col 0->A14(COL1) 1->A15(COL2) 2->A16(COL3) 3->C4(COL4)
+	rst:in std_logic;
+	row:out std_logic_vector(15 downto 0);
+-- 	row(15 downto 0) ->	A4 A5 A6 B6 E11 C13 F11 C15
+--				E14 B7 B8 B9 B10 D10 F9 A13
+	col:out std_logic_vector(3 downto 0));
+-- 	col 0->A14(COL1) 1->A15(COL2) 2->A16(COL3) 3->C4(COL4)
 end entity;
 
 architecture bhv of ledpnt is
-	--signal clk,mode,rst:std_logic:='0';
 	type code is array(0 to n-1) of std_logic_vector(15 downto 0);
 	constant code_0:code:=(
 	"0000000000000000", --kimi
@@ -130,15 +134,4 @@ process(clk,frame,rst) begin
 		end if;
 	end if;
 end process;
---tb:process begin
---	mode<='0';rst<='1';
---	clk<='0';
---	wait for 100 us;
---	clk<='1';
---	wait for 100 us;
---end process;
 end architecture;
---configuration CFG_TB of tb_jk is
---	for bhv
---		end for;
---end configuration;

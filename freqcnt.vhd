@@ -1,4 +1,10 @@
---should include bcdcount.vhd oc2.vhd
+------------------------------------------------------------------------------------------
+-- freqcnt.vhd -- Frequency Meter with 8BCD output
+-- Copyright (C) 2016 Beihang University, School of Physics and Nuclear Energy Engineering
+-- Author: QIN Yuhao <qinq_net@buaa.edu.cn>
+-- Note:Should include oc2.vhd bcdcount.vhd
+--	Used as component, no binding available
+------------------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -6,19 +12,12 @@ use ieee.numeric_std.all;
 entity freqcnt is
 port(
 	clk,clk1s,start,rst:in std_logic; --clk rising edge, rst low level effective
-	out0,out1,out2,out3,out4,out5,out6,out7:out std_logic_vector(3 downto 0); --bcd out
-	--led0,led1,led2,led3,led4,led5,led6,led7:out std_logic_vector(7 downto 0);
+	out0,out1,out2,out3,out4,out5,out6,out7:out std_logic_vector(3 downto 0); --bcd
 	outy:out std_logic; --for expansion
 	clksgn_out:out std_logic); --output counted clk
 end entity;
 
 architecture freqcnt of freqcnt is
---	component ledtrans is
---	port(	ins:in std_logic_vector(3 downto 0);
---		rst,pnt:in std_logic;
---		sel:out std_logic;
---		d:out std_logic_vector(7 downto 0));
---	end component;
 	component bcdcount is
 	port(
 		ina,inb:in std_logic;
@@ -32,21 +31,12 @@ architecture freqcnt of freqcnt is
 	signal clksgn:std_logic:='Z';
 	signal clkallow,clkcnt:std_logic:='0';
 	signal c0,c1,c2,c3,c4,c5,c6,c7:std_logic_vector(3 downto 0):="0000";
-	--signal l0,l1,l2,l3,l4,l5,l6,l7:std_logic_vector(7 downto 0):="ZZZZZZZZ";
 	signal rstbcd:std_logic_vector(1 downto 0):="00";
 begin
 	clksgn_out<=clksgn;
 	clkoc2:oc2 port map(a=>clk,b=>clkcnt,c=>clkcnt,y=>clksgn); --control clk
 	rstbcd(0)<=not rst; --bcdcount has opposed rst
 	rstbcd(1)<=not rst;
---	lt0:ledtrans port map(c0,rst,'0',open,l0);
---	lt1:ledtrans port map(c1,rst,'0',open,l1);
---	lt2:ledtrans port map(c2,rst,'0',open,l2);
---	lt3:ledtrans port map(c3,rst,'0',open,l3);
---	lt4:ledtrans port map(c4,rst,'0',open,l4);
---	lt5:ledtrans port map(c5,rst,'0',open,l5);
---	lt6:ledtrans port map(c6,rst,'0',open,l6);
---	lt7:ledtrans port map(c7,rst,'0',open,l7);
 	bc0:bcdcount port map(clksgn,c0(0),c0(0),c0(1),c0(2),c0(3),rstbcd,"00");
 	bc1:bcdcount port map(c0(3),c1(0),c1(0),c1(1),c1(2),c1(3),rstbcd,"00");
 	bc2:bcdcount port map(c1(3),c2(0),c2(0),c2(1),c2(2),c2(3),rstbcd,"00");
@@ -57,8 +47,6 @@ begin
 	bc7:bcdcount port map(c6(3),c7(0),c7(0),c7(1),c7(2),c7(3),rstbcd,"00");
 	out0<=c0;out1<=c1;out2<=c2;out3<=c3;
 	out4<=c4;out5<=c5;out6<=c6;out7<=c7;
---	led0<=l0;led1<=l1;led2<=l2;led3<=l3;
---	led4<=l4;led5<=l5;led6<=l6;led7<=l7;
 	outy<=not c7(3); --outy should rise when back to 0
 	process(start,clkcnt,rst) begin
 		if rst='0' then clkallow<='0';

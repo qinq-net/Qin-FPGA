@@ -1,12 +1,20 @@
+------------------------------------------------------------------------------------------
+-- ledtrans.vhd -- bin2LED Translator
+-- Copyright (C) 2016 Beihang University, School of Physics and Nuclear Energy Engineering
+-- Author: QIN Yuhao <qinq_net@buaa.edu.cn>
+------------------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
---use ieee.std_logic_unsigned.all;
 
 entity ledtrans is
 	port(	ins:in std_logic_vector(3 downto 0);
-		rst,pnt:in std_logic;
-		sel:out std_logic;
+--		ledcon	7->AB20(DS1) 6->Y21(DS2) 5->Y22(DS3) 4->W22(DS4)
+--			3->V22(DS5) 2->U22(DS6) 1->AA17(DS7) 0->V16(DS8)
+		rst,pnt:in std_logic; --rst->'1', pnt->'0'
+		sel:out std_logic; --sel->open
 		d:out std_logic_vector(7 downto 0));
+--		ledout	7->AA20(LA) 6->W20(LB) 5->R21(LC) 4->P21(LD)
+--			3->N21(LE) 2->N20(LF) 1->M21(LG) 0->M19(LH)
 end entity;
 architecture ledtrans of ledtrans is
 	begin

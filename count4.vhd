@@ -1,6 +1,10 @@
+------------------------------------------------------------------------------------------
+-- count4.vhd -- 4-bit binary counter
+-- Copyright (C) 2016 Beihang University, School of Physics and Nuclear Energy Engineering
+-- Author: QIN Yuhao <qinq_net@buaa.edu.cn>
+------------------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
---use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
 entity count4 is
@@ -25,4 +29,3 @@ architecture bhv of count4 is
 		q <= q1;
 		notq <= not q1;
 end architecture bhv;
-	
