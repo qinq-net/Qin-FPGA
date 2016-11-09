@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 --use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
-entity ledpnt is
+entity ledpnt_orig is
 	generic(n:integer:=72); -- length of chararray
 	port( clk:in std_logic; --clk->P20(EA2_p6)~FRQ_Q11(1024Hz)
 	mode:in std_logic; --mode->N18(SW1) RST->AB15(F1)
@@ -15,7 +15,7 @@ entity ledpnt is
 -- col 0->A14(COL1) 1->A15(COL2) 2->A16(COL3) 3->C4(COL4)
 end entity;
 
-architecture bhv of ledpnt is
+architecture bhv of ledpnt_orig is
 	--signal clk,mode,rst:std_logic:='0';
 	type code is array(0 to n-1) of std_logic_vector(15 downto 0);
 	constant code_0:code:=(

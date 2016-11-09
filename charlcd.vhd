@@ -4,14 +4,17 @@ use ieee.numeric_std.all;
 --use ieee.std_logic_arith.all;
 --use ieee.std_logic_unsigned.all;
 entity charlcd is
-	generic(N:integer:=200;
+	generic(freq:integer:=24000000;
+		N:integer:=24000000/250000;
+--		N:integer:=200;
 		delay:integer:=100);
-	port(	clk:in std_logic; --system clock clk->?
+	port(	clk:in std_logic; --system clock clk->P20(EA2+p6)~FREQ_HQ0(24MHz)
 		rst:in std_logic; --system reset, low level effective rst->U15(SW1)
 		oe:out std_logic; --LCD power port oe->A4(LCD_ES)
 		rs:out std_logic; --LCD_da input rs->A6(LCD_R_NS)
 		rw:out std_logic; --LCD rw input rw->A5(LCD_R_NW)
-		data:out std_logic_vector(7 downto 0)); -- LCD data input
+		data:out std_logic_vector(7 downto 0); -- LCD data input
+		clk1s:out std_logic);
 	--data->(AB17,AB18,C3,E5,C7,E6,F7,A3)
 end entity;
 architecture bhv of charlcd is
@@ -59,7 +62,7 @@ begin
 				c1:=0;clk0:=not clk0;
 			else c1:=c1+1;
 			end if;
-			if c2=50000000/2 -1 then --1Hz clock divide used for counting
+			if c2=freq/2 -1 then --1Hz clock divide used for counting
 				c2:=0;clk1:=not clk1;
 			else c2:=c2+1;
 			end if;
@@ -263,4 +266,5 @@ begin
 			end if;
 		end if;
 	end process;
+	clk1s<=clk_1Hz;
 end architecture bhv;

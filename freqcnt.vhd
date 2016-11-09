@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 
 entity freqcnt is
 port(
-	clk,start,rst:in std_logic; --clk rising edge, rst low level effective
+	clk,clk1s,start,rst:in std_logic; --clk rising edge, rst low level effective
 	out0,out1,out2,out3,out4,out5,out6,out7:out std_logic_vector(3 downto 0); --bcd out
 	--led0,led1,led2,led3,led4,led5,led6,led7:out std_logic_vector(7 downto 0);
 	outy:out std_logic; --for expansion
@@ -30,13 +30,13 @@ architecture freqcnt of freqcnt is
 		y:out std_logic);
 	end component;
 	signal clksgn:std_logic:='Z';
-	signal clkallow:std_logic:='0';
+	signal clkallow,clkcnt:std_logic:='0';
 	signal c0,c1,c2,c3,c4,c5,c6,c7:std_logic_vector(3 downto 0):="0000";
 	--signal l0,l1,l2,l3,l4,l5,l6,l7:std_logic_vector(7 downto 0):="ZZZZZZZZ";
 	signal rstbcd:std_logic_vector(1 downto 0):="00";
 begin
 	clksgn_out<=clksgn;
-	clkoc2:oc2 port map(a=>clk,b=>clkallow,c=>clkallow,y=>clksgn); --control clk
+	clkoc2:oc2 port map(a=>clk,b=>clkcnt,c=>clkcnt,y=>clksgn); --control clk
 	rstbcd(0)<=not rst; --bcdcount has opposed rst
 	rstbcd(1)<=not rst;
 --	lt0:ledtrans port map(c0,rst,'0',open,l0);
@@ -60,12 +60,29 @@ begin
 --	led0<=l0;led1<=l1;led2<=l2;led3<=l3;
 --	led4<=l4;led5<=l5;led6<=l6;led7<=l7;
 	outy<=not c7(3); --outy should rise when back to 0
-	process begin
-		wait until(start'event and start='1');
-		clkallow<='1';
-		wait for 1 sec;
-		clkallow<='0';
+	process(start,clkcnt,rst) begin
+		if rst='0' then clkallow<='0';
+		elsif clkcnt='1' then
+			clkallow<='0';
+		elsif start'event and start='1' and clkallow/='1' then
+			clkallow<='1';
+		end if;
 	end process;
+	process(clk1s,rst) begin
+		if rst='0' then clkcnt<='0';
+		elsif clk1s'event and clk1s='1' then
+			case clkcnt is
+				when '0'=>if clkallow='1' then clkcnt<='1';end if;
+				when '1'=>clkcnt<='0';
+			end case;
+		end if;
+	end process;
+--	process begin
+--		wait until(start'event and start='1');
+--		clkallow<='1';
+--		wait for 1 sec;
+--		clkallow<='0';
+--	end process;
 --	process(clkallow,clk) begin
 --		case clkallow is
 --			when '1'=>clksgn<=clk;

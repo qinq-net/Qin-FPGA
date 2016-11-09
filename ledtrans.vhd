@@ -16,6 +16,7 @@ architecture ledtrans of ledtrans is
 			when "0000"=>d<="1111110"&pnt;
 			when "0001"=>d<="0110000"&pnt;
 			when "0010"=>d<="1101101"&pnt;
+			when "0011"=>d<="1111001"&pnt;
 			when "0100"=>d<="0110011"&pnt;
 			when "0101"=>d<="1011011"&pnt;
 			when "0110"=>d<="1011111"&pnt;

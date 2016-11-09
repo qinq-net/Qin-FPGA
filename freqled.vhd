@@ -7,6 +7,7 @@ entity freqled is
 port(
 	clk,start,rst:in std_logic; --rst low level effective, start rising edge effective
 --	clk->N19(EA2_p5)~target start->AB15(F1,CON1.10) rst->AA15(SW4)
+	clk1s:in std_logic; --clk1s->R17(EA2_p4)
 	clkled:in std_logic;
 --	clkled->P20(EA2_p6)~FRQ_Q9(4096Hz)
 	ledout,ledds:out std_logic_vector(7 downto 0);
@@ -19,6 +20,7 @@ architecture freqled of freqled is
 	component freqcnt is
 	port(
 		clk,start,rst:in std_logic;
+		clk1s:in std_logic;
 		out0,out1,out2,out3,out4,out5,out6,out7:out std_logic_vector(3 downto 0);
 		--led0,led1,led2,led3,led4,led5,led6,led7:out std_logic_vector(7 downto 0);
 		outy:out std_logic;
@@ -51,7 +53,7 @@ architecture freqled of freqled is
 	signal notrst:std_logic;
 begin
 	notrst<=not rst;
-	fc:freqcnt port map(clk,start,rst,
+	fc:freqcnt port map(clk,start,rst,clk1s,
 		--out0,out1,out2,out3,out4,out5,out6,out7,
 		cnts(0),cnts(1),cnts(2),cnts(3),cnts(4),cnts(5),cnts(6),cnts(7),
 		--led0,led1,led2,led3,led4,led5,led6,led7:out std_logic_vector(7 downto 0);
@@ -72,5 +74,5 @@ begin
 	ledptr<=(to_integer(unsigned(ct4_sgn)) mod 8);
 	ins_sgn<=cnts(ledptr);
 	tr3:trans3 port map(ins=>ct4_sgn(2 downto 0),notpwr=>'0',outs=>ledds_sgn);
-	ledds<=ledds_sgn;ledout<=not ledout_sgn;
+	ledds<=ledds_sgn;ledout<=ledout_sgn;
 end architecture;
